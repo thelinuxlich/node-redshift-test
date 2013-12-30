@@ -2,3 +2,4 @@ name							: partial.js
 version							: 1.01
 secret							: secret-key-for-web
 author							: You company name
+db_url : postgres://user:password@localhost:5432/
