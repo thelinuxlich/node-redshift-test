@@ -3,6 +3,7 @@ var QueryStream = require('pg-query-stream');
 exports.install = function(framework) {
 	framework.route('/', test_db);
     framework.route('/pageviews', test_pageviews);
+    framework.route('/creation', test_creation);
     framework.websocket('/pageviews', socket_pageviews, ['json']);
 };
 
@@ -50,5 +51,46 @@ function socket_pageviews() {
                 self.send(chunk);
             });
         });
+    });
+}
+
+function test_creation() {
+    var self = this;
+    var complex_data;
+
+    clearTimeout(self.subscribe.timeout);
+    self.await(function(next) {
+        self.database(function(err, client, done) {
+            client.query("create table venue("+
+                "venueid smallint not null distkey sortkey,"+
+                "venuename varchar(100),"+
+                "venuecity varchar(30),"+
+                "venuestate char(2),"+
+                "venueseats integer)", function(err, rows) {
+
+                if(!err) {
+                    console.log("Table venue created successfully");
+                }
+
+                client.query("insert into venue(venueid,venuename) values($1,$2)",[1,'bla'], function(err, rows) {
+                    if(!err) {
+                        console.log("Testing insertion with parameters");
+                    } else {
+                        console.log(err);
+                    }
+                    client.query("drop table venue", function(err, rows) {
+                        if(!err) {
+                            console.log("Table venue dropped");
+                        }
+                        next();
+                    });
+                });
+                
+            });
+        });
+    });
+
+    self.complete(function(){
+        self.view('creation');
     });
 }
