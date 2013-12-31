@@ -13,6 +13,7 @@
   "author": "Alisson",
   "dependencies": {
     "pg": "*",
+    "pg-query-stream": "*",
     "partial.js": "git://github.com/petersirka/partial.js.git"
   }
 }

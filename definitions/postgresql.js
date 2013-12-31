@@ -1,5 +1,5 @@
-var pg = require('pg.js');
+var pg = require('pg');
 
 framework.database = function(callback) {
-    return new pg.connect(framework.config['db_url'], callback);
+    return pg.connect(framework.config['db_url'], callback);
 };

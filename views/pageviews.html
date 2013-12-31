@@ -1,0 +1,21 @@
+<h1>Streaming 1000 rows from 'pageviews' table via websockets</h1>
+<table width="100%" class="table" cellpadding="0" cellspacing="0" border="0">
+</table>
+<script type="text/javascript">
+var socket = new WebSocket('ws://localhost:8000/pageviews');
+
+socket.onopen = function() {
+    console.log('open');
+};
+
+socket.onmessage = function(e) {
+    console.log("Receiving message");
+    var el = $('table');
+    var m = JSON.parse(decodeURIComponent(e.data));
+    $("table").append("<tr><td>"+m.visit+"</td><td>"+m.url+"</td></tr>");
+};
+
+socket.onclose = function() {
+    console.log('close');
+};
+</script>
